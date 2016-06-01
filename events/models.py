@@ -1,23 +1,9 @@
+import geocoder
 from django.db import models
 from django.contrib import auth
 
 
-# class Location(models.Model):
-#         country = models.CharField(max_length=30)
-#         city = models.CharField(max_length=40)
-#
-#         def __str__(self):
-#                 return self.city + ",  " + self.country
-
-
 class Event(models.Model):
-
-    # class Status:
-    #     OPEN = 1
-    #     CANCELLED = 2
-    #     POSTPONED = 3
-    #     CLOSED = 4
-    #
     choices = ((1, 'open'), (2, 'cancelled'), (3, 'postponed'), (4, 'closed'))
 
     title = models.CharField(max_length=50)
@@ -27,12 +13,12 @@ class Event(models.Model):
     price = models.PositiveIntegerField(null=True, blank=True)
     status = models.IntegerField(choices=choices, default=1)
 
-    location = models.CharField(max_length=50, null=True, blank=True) # g = geocoder.google('fkjghf') >> latlng
-    longitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
+    location = models.CharField(max_length=50, null=True, blank=True, default="tel aviv")
+    longitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
     host = models.ForeignKey(auth.models.User, related_name='events')
 
-    # location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    host = models.ForeignKey(auth.models.User)
 
     def __str__(self):
         return self.title
@@ -56,6 +42,7 @@ class EventGuests(models.Model):
     guest = models.ForeignKey(auth.models.User, related_name='guest_events')
     event = models.ForeignKey(Event, related_name='event_guests')
     can_edit = models.BooleanField(default=False)
+
 
 
 # class Person(models.Model):

@@ -4,6 +4,12 @@
 
 {% block content %}
 
+<script>jQuery(document).ready(function($) {
+    $("#cancel").click(function() {
+        window.document.location = $(this).attr('href');
+    });
+});
+</script>
 
     <form method="post">
         {% csrf_token %}
@@ -11,6 +17,9 @@
         {% buttons %}
             <button type="submit" class="btn btn-primary">
                 Save {% bootstrap_icon "save" %}
+            </button>
+            <button type="button" class="btn btn-primary" id="cancel" href="{% url 'events:home' %}">
+                Cancel
             </button>
         {% endbuttons %}
     </form>

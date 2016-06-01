@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<script>jQuery(document).ready(function($) {
+<script>
+    jQuery(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.document.location = $(this).find("a").attr('href');
     });
@@ -9,7 +10,7 @@
 </script>
     <table class="table table-bordered">
         <thead>
-        <tr>""
+        <tr>
             <th>Event</th>
             <th>Starts at</th>
             <th>Status</th>
@@ -19,7 +20,7 @@
         {% for object in object_list %}
 
             <tr class="clickable-row" >
-                <td><a href="{% url 'events:update' object.pk %}"> {{ object.title }}</a></td>
+                <td><a href="{% url 'events:details' object.pk %}"> {{ object.title }}</a></td>
                 <td>{{ object.start }}</td>
                 <td>{{ object.get_status_display }}</td>
             </tr>

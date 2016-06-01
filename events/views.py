@@ -1,5 +1,6 @@
 import datetime
 
+import geocoder
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import Sum
@@ -8,7 +9,7 @@ from django.utils.encoding import escape_uri_path
 from django.views.generic import View
 from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
-
+from django.views.generic.detail import DetailView
 from . import forms
 from . import models
 # Create your views here.
@@ -63,7 +64,7 @@ class EventMixin:
         'description',
         'price',
         'status',
-        # 'location',
+        'location',
     )
     success_url = reverse_lazy('events:home')
 
@@ -72,6 +73,9 @@ class EventMixin:
 
     def form_valid(self, form):
         # assert False, self.request.user.username
+        form.instance.longitude = geocoder.google(form.instance.location).latlng[0]
+        form.instance.latitude = geocoder.google(form.instance.location).latlng[1]
+
         form.instance.host = self.request.user
         return super().form_valid(form)
 
@@ -84,13 +88,24 @@ class UpdateEventView(LoggedInMixin, EventMixin, UpdateView):
     page_title = "Edit events"
 
 
-# class DetialsEventView(LoggedInMixin, EventMixin, View):
-#     page_title = "event's Details"
+class DetialsEventView(DetailView):
+    page_title = "event's Details"
+    model = models.Event
+    success_url = reverse_lazy('events:update')
+
+    def get_context_data(self, **kwargs):
+        context = super(DetialsEventView, self).get_context_data(**kwargs)
+        return context
 
 
 class EventListView(LoggedInMixin, ListView):
     page_title = "Home"
     model = models.Event
+
+
+class GuestListView(LoggedInMixin, ListView):
+    page_title = "Home"
+    model = models.Event.host
 
 # def get_queryset(self):
 #     return super().get_queryset().filter(user=self.request.user)
