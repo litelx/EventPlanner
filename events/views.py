@@ -63,7 +63,7 @@ class EventMixin:
         'description',
         'price',
         'status',
-        # 'location',
+        'location',
     )
     success_url = reverse_lazy('events:home')
 
