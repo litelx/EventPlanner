@@ -43,6 +43,8 @@ class EventGuests(models.Model):
     event = models.ForeignKey(Event, related_name='event_guests')
     can_edit = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = (('guest', 'event'))
 
 
 # class Person(models.Model):
