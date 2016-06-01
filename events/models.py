@@ -1,3 +1,4 @@
+import geocoder
 from django.db import models
 from django.contrib import auth
 
@@ -11,13 +12,6 @@ from django.contrib import auth
 
 
 class Event(models.Model):
-
-    # class Status:
-    #     OPEN = 1
-    #     CANCELLED = 2
-    #     POSTPONED = 3
-    #     CLOSED = 4
-    #
     choices = ((1, 'open'), (2, 'cancelled'), (3, 'postponed'), (4, 'closed'))
 
     title = models.CharField(max_length=50)
@@ -28,8 +22,8 @@ class Event(models.Model):
     status = models.IntegerField(choices=choices, default=1)
 
     location = models.CharField(max_length=50, null=True, blank=True) # g = geocoder.google('fkjghf') >> latlng
-    longitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
+    longitude = geocoder.google(location).latlng[0]     # models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
+    latitude = geocoder.google(location).latlng[1]      # models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
     host = models.ForeignKey(auth.models.User)
 
     # TODO guests
