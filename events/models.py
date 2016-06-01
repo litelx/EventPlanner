@@ -30,9 +30,8 @@ class Event(models.Model):
     location = models.CharField(max_length=50, null=True, blank=True) # g = geocoder.google('fkjghf') >> latlng
     longitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
     latitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
-    host = models.ForeignKey(auth.models.User)
+    host = models.ForeignKey(auth.models.User, related_name='events')
 
-    # TODO guests
     # location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -47,9 +46,16 @@ class Item(models.Model):
 
 
 class Slot(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    guest = models.EmailField()
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='slots')
+    guest = models.ForeignKey(auth.models.User, related_name='slots') # TODO: what's the best way to contrain to guests + host
     comment = models.CharField(max_length=100)
+
+class EventGuests(models.Model):
+    ''' many2many relationship events - guests
+    '''
+    guest = models.ForeignKey(auth.models.User, related_name='guest_events')
+    event = models.ForeignKey(Event, related_name='event_guests')
+
 
 # class Person(models.Model):
 #         first_name = models.CharField(max_length=30)
