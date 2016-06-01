@@ -55,6 +55,7 @@ class EventGuests(models.Model):
     '''
     guest = models.ForeignKey(auth.models.User, related_name='guest_events')
     event = models.ForeignKey(Event, related_name='event_guests')
+    can_edit = models.BooleanField(default=False)
 
 
 # class Person(models.Model):
