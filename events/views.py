@@ -73,8 +73,9 @@ class EventMixin:
 
     def form_valid(self, form):
         # assert False, self.request.user.username
-        form.instance.longitude = geocoder.google(form.instance.location).latlng[0]
-        form.instance.latitude = geocoder.google(form.instance.location).latlng[1]
+
+        form.instance.latitude = geocoder.google(form.instance.location).latlng[0]
+        form.instance.longitude = geocoder.google(form.instance.location).latlng[1]
 
         form.instance.host = self.request.user
         return super().form_valid(form)
