@@ -13,14 +13,15 @@ class Event(models.Model):
     price = models.PositiveIntegerField(null=True, blank=True)
     status = models.IntegerField(choices=choices, default=1)
 
-    location = models.CharField(max_length=50, null=True, blank=True, default="tel aviv") # g = geocoder.google('fkjghf') >> latlng
-    longitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
-    # geocoder.google(location).latlng[1]      #
+    location = models.CharField(max_length=50, null=True, blank=True, default="tel aviv")
+    longitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
+
     host = models.ForeignKey(auth.models.User)
+    # guest = models.ForeignKey(auth.models.User)
+
 
     # TODO guests
-    # location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -37,6 +38,7 @@ class Slot(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     guest = models.EmailField()
     comment = models.CharField(max_length=100)
+
 
 # class Person(models.Model):
 #         first_name = models.CharField(max_length=30)

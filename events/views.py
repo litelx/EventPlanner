@@ -95,14 +95,17 @@ class DetialsEventView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetialsEventView, self).get_context_data(**kwargs)
-        # context['longitude'] = geocoder.google(context['location']).latlng[0]
-        # context['latitude'] = geocoder.google(context['location']).latlng[1]
         return context
 
 
 class EventListView(LoggedInMixin, ListView):
     page_title = "Home"
     model = models.Event
+
+
+class GuestListView(LoggedInMixin, ListView):
+    page_title = "Home"
+    model = models.Event.host
 
 # def get_queryset(self):
 #     return super().get_queryset().filter(user=self.request.user)

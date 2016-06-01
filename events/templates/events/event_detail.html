@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-
 {% block content %}
 
-<script>jQuery(document).ready(function($) {
+<script>
+    jQuery(document).ready(function($) {
     $(".btn").click(function() {
+        window.document.location = $(this).attr('href');
+    });
+});
+    jQuery(document).ready(function($) {
+    $("#home").click(function() {
         window.document.location = $(this).attr('href');
     });
 });
@@ -24,7 +29,7 @@
     <button type="submit" class="btn btn-primary" href="{% url 'events:update' object.pk %}">
         update {% bootstrap_icon "pencil" %}
     </button>
-
+    <button type="button" class="btn btn-primary" id="home" href="{% url 'events:home' %}">
+        Back to event list
+    </button>
 {% endblock %}
-<!-- -->
-    <!---->
