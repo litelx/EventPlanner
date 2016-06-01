@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+
+{% block content %}
+
+<script>jQuery(document).ready(function($) {
+    $(".btn").click(function() {
+        window.document.location = $(this).attr('href');
+    });
+});
+</script>
+    <h1>{{ object.title }}</h1>
+
+    <p>{{ object.start }}       </p>
+    <p>{{ object.end }}         </p>
+    <p>{{ object.description }} </p>
+    <p>{{ object.price }}       </p>
+    <p>{{ object.status }}      </p>
+    <p>{{ object.location }}    </p>
+    <p>{{ object.longitude }}   </p>
+    <p>{{ object.latitude }}    </p>
+
+    <button type="submit" class="btn btn-primary" href="{% url 'events:update' object.pk %}">
+        update {% bootstrap_icon "pencil" %}
+    </button>
+
+{% endblock %}
+<!-- -->
+    <!---->

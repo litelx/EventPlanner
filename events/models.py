@@ -3,14 +3,6 @@ from django.db import models
 from django.contrib import auth
 
 
-# class Location(models.Model):
-#         country = models.CharField(max_length=30)
-#         city = models.CharField(max_length=40)
-#
-#         def __str__(self):
-#                 return self.city + ",  " + self.country
-
-
 class Event(models.Model):
     choices = ((1, 'open'), (2, 'cancelled'), (3, 'postponed'), (4, 'closed'))
 
