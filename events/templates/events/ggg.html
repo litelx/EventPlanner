@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th>Starts at</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            <tr class="clickable-row">
+                <td>{{ object.title }}</td>
+                <td>{{ object.start }}</td>
+                <td>{{ object.get_status_display }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
