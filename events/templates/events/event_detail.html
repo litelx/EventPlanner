@@ -23,8 +23,8 @@
     <p>{{ object.price }}       </p>
     <p>{{ object.status }}      </p>
     <p>{{ object.location }}    </p>
-    <p>{{ object.longitude }}   </p>
     <p>{{ object.latitude }}    </p>
+    <p>{{ object.longitude }}   </p>
 
     <button type="submit" class="btn btn-primary" href="{% url 'events:update' object.pk %}">
         update {% bootstrap_icon "pencil" %}
