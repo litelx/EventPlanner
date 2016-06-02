@@ -9,15 +9,17 @@
         {% bootstrap_form form %}
         <div>
             <h2><strong>{{ guest.invited_by|capfirst }}</strong> invited you to <strong>{{ guest.event.title }}</strong></h2>
-            <p>Event time: {{ guest.event.start }} - {{ guest.event.end }}</p>
-            <p>Event location: {{ guest.event.location }}</p>
+            <p><span class="label label-default">Event time:</span>  {{ guest.event.start }} - {{ guest.event.end }}</p>
+            <p><span class="label label-default">Event location:</span>  {{ guest.event.location }}</p>
         </div>
         {% for status in statuses %}
-            <input type="radio" name="guest_response" value="{{ status.0 }}" {% if status.0 == guest.status %}checked{% endif %}> {{ status.1 }}<br>
+            <div class="radio">
+                <label><input type="radio" name="guest_response" value="{{ status.0 }}" {% if status.0 == guest.status %}checked{% endif %}>{{ status.1 }}</label>
+            </div>
         {% endfor %}
         {% buttons %}
             <button type="submit" class="btn btn-primary">
-                Respond {% bootstrap_icon "save" %}
+                Respond {% bootstrap_icon "send" %}
             </button>
         {% endbuttons %}
     </form>
