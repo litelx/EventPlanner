@@ -16,12 +16,9 @@ class Event(models.Model):
     location = models.CharField(max_length=50, null=True, blank=True, default="tel aviv")
     longitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
     latitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
+    host = models.ForeignKey(auth.models.User, related_name='events')
 
     host = models.ForeignKey(auth.models.User)
-    # guest = models.ForeignKey(auth.models.User)
-
-
-    # TODO guests
 
     def __str__(self):
         return self.title
@@ -35,9 +32,19 @@ class Item(models.Model):
 
 
 class Slot(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    guest = models.EmailField()
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='slots')
+    guest = models.ForeignKey(auth.models.User, related_name='slots') # TODO: what's the best way to contrain to guests + host
     comment = models.CharField(max_length=100)
+
+class EventGuests(models.Model):
+    ''' many2many relationship events - guests
+    '''
+    guest = models.ForeignKey(auth.models.User, related_name='guest_events')
+    event = models.ForeignKey(Event, related_name='event_guests')
+    can_edit = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = (('guest', 'event'))
 
 
 # class Person(models.Model):
