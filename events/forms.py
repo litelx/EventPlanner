@@ -6,13 +6,10 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=300, widget=forms.PasswordInput())
 
 
-# class CreateEventForm(forms.Form):
-
-    # start = forms.DateTimeField()
-    # end = forms.DateTimeField()
-    # description = forms.Textarea()
-    # price = forms.DecimalField(1000000, 0, 10)
-    # status = forms.CharField(max_length=10)
+class GuestReponseForm(forms.Form):
+    pass
     #
+    # start = forms.DateTimeField(disabled=True)
+    # end = forms.DateTimeField(disabled=True)
+    # description = forms.Textarea(disabled=True)
     # location = forms.CharField(max_length=50)
-    # location = forms.ForeignKey(Location, on_delete=models.CASCADE)

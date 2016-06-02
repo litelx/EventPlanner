@@ -3,17 +3,17 @@ import datetime
 import geocoder
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.db.models import Sum
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.encoding import escape_uri_path
 from django.views.generic import View
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
+from django.contrib import messages
+
 from . import forms
 from . import models
 # Create your views here.
-from django.http import HttpResponse
 
 
 class LoginView(FormView):
@@ -104,7 +104,8 @@ class DetialsEventView(DetailView):
 
 
 class EventListView(LoggedInMixin, ListView):
-    page_title = "Home"
+    def title(self):
+        return "Home"
     model = models.Event
 
 
@@ -127,3 +128,26 @@ class GuestListView(LoggedInMixin, ListView):
 #
 # form.add_error(None, "Invalid user name or password")
 # return self.form_invalid(form)
+
+
+class GuestResponseView(FormView):
+    form_class = forms.GuestReponseForm
+    template_name = "events/guest_reponse.html"
+
+    def title(self):
+        return "RSVP"
+
+    def get_context_data(self, **kwargs):
+        d = super().get_context_data(**kwargs)
+        d['guest'] = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['secret'])
+        d['statuses'] = models.Guest.Status.choices
+        return d
+
+    def form_valid(self, form):
+        # assert False, dir(form)
+        guest = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['secret'])
+        guest.status = form.data['guest_response']
+        # form.instance.date = datetime.date.today()
+        o = guest.save()
+        messages.success(self.request, 'Your response has been recorded')
+        return redirect('events:details', pk=guest.event_id)
