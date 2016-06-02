@@ -1,6 +1,5 @@
-import geocoder
-from django.db import models
 from django.contrib import auth
+from django.db import models
 
 
 class Event(models.Model):
@@ -29,12 +28,20 @@ class Item(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     slot_num = models.IntegerField()
     comment = models.CharField(max_length=200)
+    event = models.ForeignKey(Event, related_name="items")
+
+    def __str__(self):
+        return self.title
 
 
 class Slot(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='slots')
-    guest = models.ForeignKey(auth.models.User, related_name='slots') # TODO: what's the best way to contrain to guests + host
-    comment = models.CharField(max_length=100)
+    guest = models.ForeignKey(auth.models.User, related_name='slots', null=True, blank=True) # TODO: what's the best way to contrain to guests + host
+    comment = models.CharField(max_length=100, null=True, blank=True)
+    index = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return "{} #{}".format(self.item.title, self.index)
 
 class EventGuests(models.Model):
     ''' many2many relationship events - guests
@@ -46,8 +53,10 @@ class EventGuests(models.Model):
     class Meta:
         unique_together = (('guest', 'event'))
 
+    def __str__(self):
+        return self.guest.username
 
-# class Person(models.Model):
+            # class Person(models.Model):
 #         first_name = models.CharField(max_length=30)
 #         last_name = models.CharField(max_length=30)
 #         birthday = models.DateTimeField()

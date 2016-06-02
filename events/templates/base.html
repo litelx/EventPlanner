@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         {% block title %}
-            {{ view.page_title }} | PyPlanner
+            {{ view.title }} | PyPlanner
         {% endblock %}
     </title>
     <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
@@ -20,6 +20,8 @@
 <div class="container">
 
     <div style="float:right">
+        <a href="{% url 'events:home' %}">Events list</a>
+        |
         {{ user }}
         |
         <a href="{% url 'logout' %}">Logout</a>

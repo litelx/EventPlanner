@@ -8,6 +8,9 @@
     });
 });
 </script>
+    <div style="float:right">
+        <a href="{% url 'events:create' %}">+ Create new event</a>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -20,7 +23,7 @@
         {% for object in object_list %}
 
             <tr class="clickable-row" >
-                <td><a href="{% url 'events:details' object.pk %}"> {{ object.title }}</a></td>
+                <td style="cursor: pointer"><a href="{% url 'events:details' object.pk %}"> {{ object.title }}</a></td>
                 <td>{{ object.start }}</td>
                 <td>{{ object.get_status_display }}</td>
             </tr>

@@ -82,15 +82,19 @@ class EventMixin:
 
 
 class CreateEventView(LoggedInMixin, EventMixin, CreateView):
-    page_title = "Add New events"
+    def title(self):
+        return "Add New event"
 
 
 class UpdateEventView(LoggedInMixin, EventMixin, UpdateView):
-    page_title = "Edit events"
+    def title(self):
+        return self.object.title
 
 
 class DetialsEventView(DetailView):
-    page_title = "event's Details"
+
+    def title(self):
+        return self.object.title
     model = models.Event
     success_url = reverse_lazy('events:update')
 
@@ -106,7 +110,7 @@ class EventListView(LoggedInMixin, ListView):
 
 class GuestListView(LoggedInMixin, ListView):
     page_title = "Home"
-    model = models.Event.host
+    # model = models.
 
 # def get_queryset(self):
 #     return super().get_queryset().filter(user=self.request.user)
