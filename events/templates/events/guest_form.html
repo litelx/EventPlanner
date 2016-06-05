@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url 'events:home' %}">Events</a> » <a href="{% url 'events:details' form.instance.event_id %}">{{  form.instance.event.title }}</a> » {{ view.title }}
+{% endblock %}
 {% block content %}
 
     <form method="post">
