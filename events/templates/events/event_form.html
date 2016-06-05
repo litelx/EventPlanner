@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-
 {% block content %}
 
 <script>jQuery(document).ready(function($) {
     $("#cancel").click(function() {
+        window.document.location = $(this).attr('href');
+    });
+});
+jQuery(document).ready(function($) {
+    $("#guest").click(function() {
         window.document.location = $(this).attr('href');
     });
 });
@@ -21,7 +25,11 @@
             <button type="button" class="btn btn-primary" id="cancel" href="{% url 'events:home' %}">
                 Cancel
             </button>
+            <button type="submit" class="btn btn-primary" id="guest" href="{% url 'events:guest' %}">
+                Add guest
+            </button>
         {% endbuttons %}
     </form>
+
 
 {% endblock %}

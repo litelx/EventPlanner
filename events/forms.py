@@ -1,4 +1,8 @@
 from django import forms
+from django.contrib import auth
+
+from events.models import Event
+from . import models
 
 
 class LoginForm(forms.Form):
@@ -6,7 +10,11 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=300, widget=forms.PasswordInput())
 
 
-# class CreateEventForm(forms.Form):
+class GuestForm(forms.Form):
+    name = forms.CharField(max_length=200)
+    email = forms.EmailField()
+
+# class CreateEventForm(forms.Form):Event
 
     # start = forms.DateTimeField()
     # end = forms.DateTimeField()

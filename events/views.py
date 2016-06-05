@@ -1,5 +1,5 @@
 import datetime
-
+from django.core.mail import send_mail
 import geocoder
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -10,11 +10,18 @@ from django.views.generic import View
 from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from events.forms import GuestForm
+from django.http import HttpResponseForbidden
 from . import forms
 from . import models
 # Create your views here.
 from django.http import HttpResponse
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'lital.jos@gmail.com'
+EMAIL_HOST_PASSWORD = 'l100%josifovl'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 class LoginView(FormView):
     form_class = forms.LoginForm
@@ -95,11 +102,13 @@ class DetialsEventView(DetailView):
 
     def title(self):
         return self.object.title
+
     model = models.Event
     success_url = reverse_lazy('events:update')
 
     def get_context_data(self, **kwargs):
         context = super(DetialsEventView, self).get_context_data(**kwargs)
+        context['form'] = CreateGuestView
         return context
 
 
@@ -108,10 +117,48 @@ class EventListView(LoggedInMixin, ListView):
     model = models.Event
 
 
-class GuestListView(LoggedInMixin, ListView):
-    page_title = "Home"
-    # model = models.
+class CreateGuestView(LoggedInMixin, FormView):
+    page_title = "create guests"
+    template_name = 'events/guest_form.html'
+    form_class = GuestForm
+    # model = models.Guest
+    # fields = (
+    #     'name',
+    #     'email'
+    # )
 
+    success_url = reverse_lazy('events:home')
+
+    def form_valid(self, form):
+
+        subject = 'title' #form.cleaned_data['subject']
+        message = 'description'
+        sender = 'lital.jos@gmail.com'
+        recipients = [form.cleaned_data['email']]
+
+        send_mail(subject, message, sender, recipients)
+
+        return super().form_valid(form)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateGuestView, self).get_context_data(**kwargs)
+        return context
+    #  def title(self):
+    #     return self.name
+    # def post(self, request, *args, **kwargs):
+    #     if not request.user.is_authenticated():
+    #         return HttpResponseForbidden()
+    #     self.object = self.get_object()
+    #     return super(GuestView, self).post(request, *args, **kwargs)
+
+    # def get_success_url(self):
+    #     return reverse('events:details', kwargs={'pk': self.object.pk})
+
+    # def get_initial(self):
+    #     return super().get_initial()
 # def get_queryset(self):
 #     return super().get_queryset().filter(user=self.request.user)
 

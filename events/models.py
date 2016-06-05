@@ -17,7 +17,7 @@ class Event(models.Model):
     latitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
     host = models.ForeignKey(auth.models.User, related_name='events')
 
-    host = models.ForeignKey(auth.models.User)
+    # host = models.ForeignKey(auth.models.User)
 
     def __str__(self):
         return self.title

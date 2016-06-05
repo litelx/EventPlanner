@@ -14,7 +14,10 @@
         window.document.location = $(this).attr('href');
     });
 });
+
 </script>
+
+<div class="align-left">
     <h1>{{ object.title }}</h1>
 
     <p>{{ object.start }}       </p>
@@ -25,11 +28,19 @@
     <p>{{ object.location }}    </p>
     <p>{{ object.latitude }}    </p>
     <p>{{ object.longitude }}   </p>
+</div>
+
+
 
     <button type="submit" class="btn btn-primary" href="{% url 'events:update' object.pk %}">
         update {% bootstrap_icon "pencil" %}
+    </button>
+    <button type="button" class="btn btn-primary" id="guest" href="{% url 'events:guest' %}">
+        Add guests
     </button>
     <button type="button" class="btn btn-primary" id="home" href="{% url 'events:home' %}">
         Back to event list
     </button>
 {% endblock %}
+
+

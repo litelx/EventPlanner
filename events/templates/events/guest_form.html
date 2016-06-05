@@ -15,21 +15,21 @@
     });
 });
 </script>
-<div class="align-left">
-    <h1>{{ object.title }}</h1>
 
-    <p>{{ object.start }}       </p>
-    <p>{{ object.end }}         </p>
-    <p>{{ object.description }} </p>
-    <p>{{ object.price }}       </p>
-    <p>{{ object.get_status_display }}      </p>
-    <p>{{ object.location }}    </p>
-</div>
+<form method="post" enctype="multipart/form-data">
 
-    <button type="submit" class="btn btn-primary" href="{% url 'events:update' object.pk %}">
-        update {% bootstrap_icon "pencil" %}
-    </button>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Save {% bootstrap_icon "save" %}
+            </button>
+        {% endbuttons %}
+
+</form>
+
     <button type="button" class="btn btn-primary" id="home" href="{% url 'events:home' %}">
         Back to event list
     </button>
+
 {% endblock %}
