@@ -1,4 +1,6 @@
 from django import forms
+import events.models
+
 
 
 class LoginForm(forms.Form):
@@ -6,10 +8,9 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=300, widget=forms.PasswordInput())
 
 
-class GuestReponseForm(forms.Form):
-    pass
-    #
-    # start = forms.DateTimeField(disabled=True)
-    # end = forms.DateTimeField(disabled=True)
-    # description = forms.Textarea(disabled=True)
-    # location = forms.CharField(max_length=50)
+class GuestReponseForm(forms.ModelForm):
+
+    class Meta:
+        model = events.models.Guest
+        fields = ['status']
+    status = forms.ChoiceField(label='Please respond', widget=forms.RadioSelect, choices=events.models.Guest.Status.choices[1:])

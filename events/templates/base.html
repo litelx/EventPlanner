@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load staticfiles bootstrap3 %}
 
 <!DOCTYPE html>
 <html>
@@ -11,35 +11,35 @@
             {{ view.title }} | PyPlanner
         {% endblock %}
     </title>
+
     <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
     <script src="{% static "js/jquery-2.2.4.min.js" %}"></script>
 
 </head>
 <body>
+    {% bootstrap_messages %}
+    <div class="container">
 
-<div class="container">
+{#        <div style="float:right">#}
+{#            <a href="{% url 'events:home' %}">Events list</a>#}
+{#            |#}
+{#            {{ user }}#}
+{#            |#}
+{#            <a href="{% url 'logout' %}">Logout</a>#}
+{#        </div>#}
 
-    <div style="float:right">
-        <a href="{% url 'events:home' %}">Events list</a>
-        |
-        {{ user }}
-        |
-        <a href="{% url 'logout' %}">Logout</a>
+        <h1>
+            PyPlanner
+        </h1>
+
+        <div>
+
+            {% block content %}
+                CONTENT
+            {% endblock %}
+
+        </div>
+
     </div>
-
-    <h1>
-        PyPlanner
-    </h1>
-
-    <div>
-
-        {% block content %}
-            CONTENT
-        {% endblock %}
-
-    </div>
-
-</div>
-
 </body>
 </html>

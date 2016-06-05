@@ -11,13 +11,13 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django.contrib import messages
 
-from . import forms
-from . import models
+import events.forms
+import events.models
 # Create your views here.
 
 
 class LoginView(FormView):
-    form_class = forms.LoginForm
+    form_class = events.forms.LoginForm
     template_name = "login.html"
 
     def dispatch(self, request, *args, **kwargs):
@@ -55,7 +55,7 @@ class LoggedInMixin:
 
 
 class EventMixin:
-    model = models.Event
+    model = events.models.Event
     template = "events/event_form.html"
     fields = (
         'title',
@@ -91,22 +91,22 @@ class UpdateEventView(LoggedInMixin, EventMixin, UpdateView):
         return self.object.title
 
 
-class DetialsEventView(DetailView):
+class DetailsEventView(DetailView):
 
     def title(self):
         return self.object.title
-    model = models.Event
+    model = events.models.Event
     success_url = reverse_lazy('events:update')
 
     def get_context_data(self, **kwargs):
-        context = super(DetialsEventView, self).get_context_data(**kwargs)
+        context = super(DetailsEventView, self).get_context_data(**kwargs)
         return context
 
 
 class EventListView(LoggedInMixin, ListView):
     def title(self):
         return "Home"
-    model = models.Event
+    model = events.models.Event
 
 
 class GuestListView(LoggedInMixin, ListView):
@@ -130,24 +130,26 @@ class GuestListView(LoggedInMixin, ListView):
 # return self.form_invalid(form)
 
 
-class GuestResponseView(FormView):
-    form_class = forms.GuestReponseForm
-    template_name = "events/guest_reponse.html"
-
+class GuestResponseView(LoggedInMixin, UpdateView):
+    model = events.models.Guest
     def title(self):
         return "RSVP"
 
+    slug_field = 'secret_code'
+    form_class = events.forms.GuestReponseForm
+    # fields = ('status', )
+
     def get_context_data(self, **kwargs):
         d = super().get_context_data(**kwargs)
-        d['guest'] = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['secret'])
-        d['statuses'] = models.Guest.Status.choices
+        # d['guest'] = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['slug'])
+        # d['statuses'] = models.Guest.Status.choices
         return d
 
     def form_valid(self, form):
         # assert False, dir(form)
-        guest = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['secret'])
-        guest.status = form.data['guest_response']
+        # guest = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['secret'])
+        # guest.status = form.data['guest_response']
         # form.instance.date = datetime.date.today()
-        o = guest.save()
+        o = form.save()
         messages.success(self.request, 'Your response has been recorded')
-        return redirect('events:details', pk=guest.event_id)
+        return redirect('events:details', pk=form.instance.event_id)

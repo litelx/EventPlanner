@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+
+{% block content %}
+
+    <form method="post">
+
+        {% csrf_token %}
+        <div>
+            <h2 class="text-center"><strong>{{ form.instance.invited_by|capfirst }}</strong> invited you to <strong>{{ form.instance.event.title }}</strong></h2>
+            <p>{{ form.instance.event.description|linebreaks }}</p>
+            <p><span class="label label-default">Event time:</span>  {{ form.instance.event.start }} - {{ form.instance.event.end }}</p>
+            <p><span class="label label-default">Event location:</span>  {{ form.instance.event.location }}</p>
+        </div>
+{#        {% for status in statuses %}#}
+{#            <div class="radio">#}
+{#                <label><input type="radio" name="guest_response" value="{{ status.0 }}" {% if status.0 == guest.status %}checked{% endif %}>{{ status.1 }}</label>#}
+{#            </div>#}
+{#        {% endfor %}#}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Respond {% bootstrap_icon "send" %}
+            </button>
+        {% endbuttons %}
+
+    </form>
+
+{% endblock %}
