@@ -2,6 +2,7 @@ import datetime
 
 import geocoder
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.encoding import escape_uri_path
@@ -151,5 +152,18 @@ class GuestResponseView(LoggedInMixin, UpdateView):
         # guest.status = form.data['guest_response']
         # form.instance.date = datetime.date.today()
         o = form.save()
+        # assert False, dir(self.request)
+        send_mail(
+            'Response to invitation {} received'.format(form.instance.event.title),
+            '''
+            Dear {user},
+
+            Thank you for responding to the invitation to {event}.
+            You can always edit your response here {rsvp_url} or view the event details here {event_url}.
+            '''.format(user=form.instance.name, event=form.instance.event.title, event_url = self.request.build_absolute_uri(reverse("events:details", kwargs={'pk':form.instance.event_id})), rsvp_url = self.request.build_absolute_uri(self.request.get_full_path())),
+            'from@example.com',
+            [form.instance.email],
+            fail_silently=False,
+        )
         messages.success(self.request, 'Your response has been recorded')
         return redirect('events:details', pk=form.instance.event_id)
