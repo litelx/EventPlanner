@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url 'events:home' %}">Events</a> » <a href="{% url 'events:details' form.instance.event_id %}">{{  form.instance.event.title }}</a> » {{ view.title }}
+{% endblock %}
+{% block content %}
+
+    <form method="post">
+
+        {% csrf_token %}
+        <div>
+            <h2 class="text-center"><strong>{{ form.instance.invited_by|capfirst }}</strong> invited you to <strong>{{ form.instance.event.title }}</strong></h2>
+            <p>{{ form.instance.event.description|linebreaks }}</p>
+            <p><span class="label label-default">Event time:</span>  {{ form.instance.event.start }} - {{ form.instance.event.end }}</p>
+            <p><span class="label label-default">Event location:</span>  {{ form.instance.event.location|capfirst }}</p>
+        </div>
+
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                Respond {% bootstrap_icon "send" %}
+            </button>
+        {% endbuttons %}
+
+    </form>
+
+{% endblock %}

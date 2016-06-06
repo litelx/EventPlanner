@@ -169,6 +169,8 @@ class GuestResponseView(LoggedInMixin, UpdateView):
 
     slug_field = 'secret_code'
     form_class = events.forms.GuestReponseForm
+    template_name = 'events/guest_response.html'
+
     # fields = ('status', )
 
     def get_context_data(self, **kwargs):
