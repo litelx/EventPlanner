@@ -16,11 +16,11 @@ class GuestForm(forms.Form):
 
 class GuestReponseForm(forms.ModelForm):
 
-
     class Meta:
         model = events.models.Guest
         fields = ['status']
-    status = forms.ChoiceField(label='Please respond', widget=forms.RadioSelect, choices=events.models.Guest.Status.choices[1:])
+
+    status = forms.ChoiceField(label='Please Respond', widget=forms.RadioSelect, choices=events.models.Guest.Status.choices[1:])
 
 class EventForm(forms.ModelForm):
 

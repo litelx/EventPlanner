@@ -20,22 +20,35 @@
 
 </script>
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <p>{{ object.start }}       </p>
+            <p>{{ object.end }}         </p>
+            <p>{{ object.description }} </p>
+            <p>{{ object.price }}       </p>
+            <p>{{ object.get_status_display }}      </p>
+            <p>{{ object.location }}    </p>
+            <p>{{ object.latitude }}    </p>
+            <p>{{ object.longitude }}   </p>
+        </div>
+        <div class="col-md-6">
+            <table class="table table-responsive">
+                <caption><strong>Guests</strong></caption>
+                <tbody>
+                    {% for guest in object.guest_set.all %}
+                    <tr>
+                        <td>{{ guest.name }}</td>
+                        <td>{{ guest.get_status_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <div>
 
-<div class="align-left">
-    <h1>{{ object.title }}</h1>
-
-    <p>{{ object.start }}       </p>
-    <p>{{ object.end }}         </p>
-    <p>{{ object.description }} </p>
-    <p>{{ object.price }}       </p>
-    <p>{{ object.get_status_display }}      </p>
-    <p>{{ object.location }}    </p>
-    <p>{{ object.latitude }}    </p>
-    <p>{{ object.longitude }}   </p>
-</div>
-
-
-
+<div class="clearfix"></div>
+    {% buttons %}
     <button type="submit" class="btn btn-primary" href="{% url 'events:update' object.pk %}">
         update {% bootstrap_icon "pencil" %}
     </button>
@@ -45,6 +58,11 @@
     <button type="button" class="btn btn-primary" id="home" href="{% url 'events:home' %}">
         Back to event list
     </button>
+    {% endbuttons %}
+{#</div>#}
+
+    </div>
+
 {% endblock %}
 
 

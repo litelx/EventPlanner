@@ -32,10 +32,11 @@
         {% endbuttons %}
 
 </form>
-
+    {% buttons %}
     <button type="button" class="btn btn-primary" id="home" href="{% url 'events:home' %}">
         Back to event list
     </button>
+    {% endbuttons %}
 
 {% endblock %}
 
