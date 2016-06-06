@@ -1,32 +1,38 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block breadcrumbs %}
-    {{ block.super }} » <a href="{% url 'events:home' %}">Events</a> » <a href="{% url 'events:details' form.instance.event_id %}">{{  form.instance.event.title }}</a> » {{ view.title }}
-{% endblock %}
+
 {% block content %}
 
-    <form method="post">
+<script>
+    jQuery(document).ready(function($) {
+    $(".btn").click(function() {
+        window.document.location = $(this).attr('href');
+    });
+});
+    jQuery(document).ready(function($) {
+    $("#home").click(function() {
+        window.document.location = $(this).attr('href');
+    });
+});
+</script>
 
-        {% csrf_token %}
-        <div>
-            <h2 class="text-center"><strong>{{ form.instance.invited_by|capfirst }}</strong> invited you to <strong>{{ form.instance.event.title }}</strong></h2>
-            <p>{{ form.instance.event.description|linebreaks }}</p>
-            <p><span class="label label-default">Event time:</span>  {{ form.instance.event.start }} - {{ form.instance.event.end }}</p>
-            <p><span class="label label-default">Event location:</span>  {{ form.instance.event.location }}</p>
-        </div>
-{#        {% for status in statuses %}#}
-{#            <div class="radio">#}
-{#                <label><input type="radio" name="guest_response" value="{{ status.0 }}" {% if status.0 == guest.status %}checked{% endif %}>{{ status.1 }}</label>#}
-{#            </div>#}
-{#        {% endfor %}#}
-        {% bootstrap_form form %}
+<form method="post" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {% bootstrap_form form %}
         {% buttons %}
             <button type="submit" class="btn btn-primary">
-                Respond {% bootstrap_icon "send" %}
+                Save {% bootstrap_icon "save" %}
             </button>
         {% endbuttons %}
 
-    </form>
+</form>
+
+    <button type="button" class="btn btn-primary" id="home" href="{% url 'events:home' %}">
+        Back to event list
+    </button>
 
 {% endblock %}
+
+

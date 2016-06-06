@@ -1,5 +1,5 @@
 import datetime
-
+from django.core.mail import send_mail
 import geocoder
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
@@ -7,13 +7,16 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.encoding import escape_uri_path
 from django.views.generic import View
-from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.views.generic.list import ListView
-from django.contrib import messages
-
+from django.views.generic.detail import DetailView
+from events.forms import GuestForm
+from django.http import HttpResponseForbidden
 import events.forms
 import events.models
+from django.contrib import messages
+import random
+
 # Create your views here.
 
 
@@ -110,11 +113,13 @@ class DetailsEventView(DetailView):
 
     def title(self):
         return self.object.title
+
     model = events.models.Event
     success_url = reverse_lazy('events:update')
 
     def get_context_data(self, **kwargs):
         context = super(DetailsEventView, self).get_context_data(**kwargs)
+
         return context
 
 
@@ -124,25 +129,37 @@ class EventListView(LoggedInMixin, ListView):
     model = events.models.Event
 
 
-class GuestListView(LoggedInMixin, ListView):
-    page_title = "Home"
-    # model = models.
+class CreateGuestView(LoggedInMixin, FormView):
+    page_title = "create guests"
+    template_name = 'events/guest_form.html'
+    form_class = GuestForm
+    # model = models.Guest
+    # fields = (
+    #     'name',
+    #     'email'
+    # )
 
-# def get_queryset(self):
-#     return super().get_queryset().filter(user=self.request.user)
+    success_url = reverse_lazy('events:home')
 
-# user = authenticate(username=form.cleaned_data['username'],
-#                     password=form.cleaned_data['password'])
-#
-# if user is not None and user.is_active:
-#     login(self.request, user)
-#     if self.request.GET.get('from'):
-#         return redirect(
-#             self.request.GET['from'])  # SECURITY: check path
-#     return redirect('events:home')
-#
-# form.add_error(None, "Invalid user name or password")
-# return self.form_invalid(form)
+
+    def form_valid(self, form):
+
+        subject = 'title' #form.cleaned_data['subject']
+        message = 'description'
+        sender = 'lital.jos@gmail.com'
+        recipients = [form.cleaned_data['email']]
+
+        send_mail(subject, message, sender, recipients)
+
+        return super().form_valid(form)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateGuestView, self).get_context_data(**kwargs)
+        return context
+
 
 
 class GuestResponseView(LoggedInMixin, UpdateView):
@@ -181,3 +198,6 @@ class GuestResponseView(LoggedInMixin, UpdateView):
         )
         messages.success(self.request, 'Your response has been recorded')
         return redirect('events:details', pk=form.instance.event_id)
+
+
+

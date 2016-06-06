@@ -15,7 +15,9 @@ class Event(models.Model):
     location = models.CharField(_('location'), max_length=50, null=True, blank=True, default="tel aviv")
     longitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
     latitude = models.DecimalField(max_digits=16, decimal_places=12, null=True, blank=True)
+
     host = models.ForeignKey(auth.models.User, related_name='events', verbose_name=_('host'))
+
 
     def __str__(self):
         return self.title
