@@ -56,17 +56,18 @@ class LoggedInMixin:
 
 
 class EventMixin:
-    model = events.models.Event
-    template = "events/event_form.html"
-    fields = (
-        'title',
-        'start',
-        'end',
-        'description',
-        'price',
-        'status',
-        'location',
-    )
+    template_name = "events/event_form.html"
+    # model = events.models.Event
+    # fields = (
+    #     'title',
+    #     'start',
+    #     'end',
+    #     'description',
+    #     'price',
+    #     'status',
+    #     'location',
+    # )
+    form_class = events.forms.EventForm
     success_url = reverse_lazy('events:home')
 
     def get_initial(self):
@@ -83,13 +84,26 @@ class EventMixin:
 
 
 class CreateEventView(LoggedInMixin, EventMixin, CreateView):
+
+    # template = "events/event_form.html"
     def title(self):
         return "Add New event"
 
+    def form_valid(self, form):
+        messages.success(self.request, 'Succefully created event: ' + form.instance.title)
+        return super().form_valid(form)
+
 
 class UpdateEventView(LoggedInMixin, EventMixin, UpdateView):
+    # template = "events/event_form.html"
+    model = events.models.Event
+
     def title(self):
         return self.object.title
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Succefully updated event: ' + form.instance.title)
+        return super().form_valid(form)
 
 
 class DetailsEventView(DetailView):

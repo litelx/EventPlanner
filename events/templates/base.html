@@ -8,31 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         {% block title %}
-            {{ view.title }} | PyPlanner
+            {{ view.title }} | Event Planner
         {% endblock %}
     </title>
 
     <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
     <script src="{% static "js/jquery-2.2.4.min.js" %}"></script>
-
+    <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
+    {{ form.media }}
 </head>
 <body>
+    <div class="container">
+    <div class="page-header">
+        <h1>
+            Event Planner
+        </h1>
+    </div>
     {% block breadcrumbs %}<a href="{% url 'events:home' %}">Home</a>{% endblock %}
     {% bootstrap_messages %}
-    <div class="container">
-
-{#        <div style="float:right">#}
-{#            <a href="{% url 'events:home' %}">Events list</a>#}
-{#            |#}
-{#            {{ user }}#}
-{#            |#}
-{#            <a href="{% url 'logout' %}">Logout</a>#}
-{#        </div>#}
-
-        <h1>
-            PyPlanner
-        </h1>
-
         <div>
 
             {% block content %}

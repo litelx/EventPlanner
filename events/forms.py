@@ -1,3 +1,4 @@
+from datetimewidget.widgets import DateTimeWidget
 from django import forms
 import events.models
 
@@ -14,3 +15,19 @@ class GuestReponseForm(forms.ModelForm):
         model = events.models.Guest
         fields = ['status']
     status = forms.ChoiceField(label='Please respond', widget=forms.RadioSelect, choices=events.models.Guest.Status.choices[1:])
+
+class EventForm(forms.ModelForm):
+
+    class Meta:
+        model = events.models.Event
+        fields = (
+            'title',
+            'start',
+            'end',
+            'description',
+            'price',
+            'status',
+            'location',
+        )
+    start = forms.DateTimeField(label='starts at', widget=DateTimeWidget(bootstrap_version=3, attrs={'data-readonly': 'false'}))
+    end = forms.DateTimeField(label='ends at', widget=DateTimeWidget(bootstrap_version=3, attrs={'data-readonly': 'false'}))
