@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+<<<<<<< HEAD
+=======
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url 'events:home' %}">Events</a> » {{ view.title }}
+{% endblock %}
+>>>>>>> 57389f0dd4d0a6f11b5ba6ce5af58a85d34f0701
 {% block content %}
 
 <script>jQuery(document).ready(function($) {

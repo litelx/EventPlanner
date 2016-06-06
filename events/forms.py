@@ -1,8 +1,5 @@
 from django import forms
-from django.contrib import auth
-
-from events.models import Event
-from . import models
+import events.models
 
 
 class LoginForm(forms.Form):
@@ -10,17 +7,16 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=300, widget=forms.PasswordInput())
 
 
+
 class GuestForm(forms.Form):
     name = forms.CharField(max_length=200)
     email = forms.EmailField()
 
-# class CreateEventForm(forms.Form):Event
 
-    # start = forms.DateTimeField()
-    # end = forms.DateTimeField()
-    # description = forms.Textarea()
-    # price = forms.DecimalField(1000000, 0, 10)
-    # status = forms.CharField(max_length=10)
-    #
-    # location = forms.CharField(max_length=50)
-    # location = forms.ForeignKey(Location, on_delete=models.CASCADE)
+class GuestReponseForm(forms.ModelForm):
+
+
+    class Meta:
+        model = events.models.Guest
+        fields = ['status']
+    status = forms.ChoiceField(label='Please respond', widget=forms.RadioSelect, choices=events.models.Guest.Status.choices[1:])

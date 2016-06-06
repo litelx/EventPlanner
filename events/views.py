@@ -3,8 +3,7 @@ from django.core.mail import send_mail
 import geocoder
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.db.models import Sum
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.encoding import escape_uri_path
 from django.views.generic import View
 from django.views.generic.edit import CreateView, FormView, UpdateView
@@ -12,19 +11,16 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from events.forms import GuestForm
 from django.http import HttpResponseForbidden
-from . import forms
-from . import models
-# Create your views here.
-from django.http import HttpResponse
+import events.forms
+import events.models
+from django.contrib import messages
+import random
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'lital.jos@gmail.com'
-EMAIL_HOST_PASSWORD = 'l100%josifovl'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# Create your views here.
+
 
 class LoginView(FormView):
-    form_class = forms.LoginForm
+    form_class = events.forms.LoginForm
     template_name = "login.html"
 
     def dispatch(self, request, *args, **kwargs):
@@ -62,7 +58,7 @@ class LoggedInMixin:
 
 
 class EventMixin:
-    model = models.Event
+    model = events.models.Event
     template = "events/event_form.html"
     fields = (
         'title',
@@ -98,23 +94,24 @@ class UpdateEventView(LoggedInMixin, EventMixin, UpdateView):
         return self.object.title
 
 
-class DetialsEventView(DetailView):
+class DetailsEventView(DetailView):
 
     def title(self):
         return self.object.title
 
-    model = models.Event
+    model = events.models.Event
     success_url = reverse_lazy('events:update')
 
     def get_context_data(self, **kwargs):
-        context = super(DetialsEventView, self).get_context_data(**kwargs)
-        context['form'] = CreateGuestView
+        context = super(DetailsEventView, self).get_context_data(**kwargs)
+
         return context
 
 
 class EventListView(LoggedInMixin, ListView):
-    page_title = "Home"
-    model = models.Event
+    def title(self):
+        return "Home"
+    model = events.models.Event
 
 
 class CreateGuestView(LoggedInMixin, FormView):
@@ -128,6 +125,7 @@ class CreateGuestView(LoggedInMixin, FormView):
     # )
 
     success_url = reverse_lazy('events:home')
+
 
     def form_valid(self, form):
 
@@ -146,31 +144,32 @@ class CreateGuestView(LoggedInMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(CreateGuestView, self).get_context_data(**kwargs)
         return context
-    #  def title(self):
-    #     return self.name
-    # def post(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated():
-    #         return HttpResponseForbidden()
-    #     self.object = self.get_object()
-    #     return super(GuestView, self).post(request, *args, **kwargs)
 
-    # def get_success_url(self):
-    #     return reverse('events:details', kwargs={'pk': self.object.pk})
 
-    # def get_initial(self):
-    #     return super().get_initial()
-# def get_queryset(self):
-#     return super().get_queryset().filter(user=self.request.user)
 
-# user = authenticate(username=form.cleaned_data['username'],
-#                     password=form.cleaned_data['password'])
-#
-# if user is not None and user.is_active:
-#     login(self.request, user)
-#     if self.request.GET.get('from'):
-#         return redirect(
-#             self.request.GET['from'])  # SECURITY: check path
-#     return redirect('events:home')
-#
-# form.add_error(None, "Invalid user name or password")
-# return self.form_invalid(form)
+class GuestResponseView(LoggedInMixin, UpdateView):
+    model = events.models.Guest
+    def title(self):
+        return "RSVP"
+
+    slug_field = 'secret_code'
+    form_class = events.forms.GuestReponseForm
+    # fields = ('status', )
+
+    def get_context_data(self, **kwargs):
+        d = super().get_context_data(**kwargs)
+        # d['guest'] = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['slug'])
+        # d['statuses'] = models.Guest.Status.choices
+        return d
+
+    def form_valid(self, form):
+        # assert False, dir(form)
+        # guest = get_object_or_404(models.Guest.objects, secret_code= self.kwargs['secret'])
+        # guest.status = form.data['guest_response']
+        # form.instance.date = datetime.date.today()
+        o = form.save()
+        messages.success(self.request, 'Your response has been recorded')
+        return redirect('events:details', pk=form.instance.event_id)
+
+
+

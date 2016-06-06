@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
+{% block breadcrumbs %}
+    {{ block.super }} » <a href="{% url 'events:home' %}">Events</a> » {{ view.title }}
+{% endblock %}
 {% block content %}
 
 <script>
@@ -16,6 +19,7 @@
 });
 
 </script>
+
 
 <div class="align-left">
     <h1>{{ object.title }}</h1>
