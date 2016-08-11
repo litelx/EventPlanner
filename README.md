@@ -6,7 +6,7 @@ Pourpose:
 Ease users rise an event.
 
 Actors:
-- crating event user
+- creating event user
 - guests
 
 Design:
@@ -14,11 +14,11 @@ A creator crwate an event, includes title, date and location. The creator can ad
 Each guest get an email, and by clicking a link in it he can have the description of the event. He can also decide if he comes or not, can see what to bring if requested can add or remove items to bring with others.
 
 Thenologies:
-Django
-Python
-sqlite3 db
-HTML
-CSS - bootstrap
-javascript - jquery
+Django, 
+Python, 
+sqlite3 db ,
+HTML, 
+CSS - bootstrap, 
+javascript - jquery, 
 
 google maps api
